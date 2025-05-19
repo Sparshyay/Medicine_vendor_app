@@ -1,11 +1,11 @@
 {
-    "name": "medicine_vendor_app",
-    "short_name": "medicine_vendor_app",
+    "name": "MRship App",
+    "short_name": "MRship",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#1A73E8",
+    "theme_color": "#1A73E8",
+    "description": "Medical representative app for managing doctors and brochures.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
