@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base href="/">
+  <base href="./">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -62,47 +62,50 @@
   <script>
     window.addEventListener('load', function() {
       var loading = document.querySelector('#loading');
-      const serviceWorkerVersion = "2059573231";
       
-      // Download main.dart.js
+      // Initialize the Flutter engine
       _flutter = _flutter || {};
-      _flutter.loader = _flutter.loader || {};
-      _flutter.loader.loadEntrypoint = function(options) {
-        var entrypointScript = document.createElement('script');
-        entrypointScript.src = 'main.dart.js';
-        entrypointScript.type = 'application/javascript';
-        document.body.appendChild(entrypointScript);
-        entrypointScript.addEventListener('load', function() {
-          // Hide loading indicator
+      let serviceWorkerVersion = null;
+      let serviceWorkerRegistration = null;
+      
+      // This is a simple check to determine if we need to reload the page
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('flutter-first-frame', function() {
+          navigator.serviceWorker.register('flutter_service_worker.js?v=' + serviceWorkerVersion);
+        });
+      }
+      
+      // The loading indicator should be shown until the app is fully loaded
+      const loadMainDartJs = function() {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('flutter_service_worker.js?v=697241287');
+        }
+        
+        const scriptTag = document.createElement('script');
+        scriptTag.src = 'main.dart.js';
+        scriptTag.type = 'application/javascript';
+        document.body.append(scriptTag);
+        
+        // Remove the loading indicator when the app is ready
+        scriptTag.onload = function() {
           loading.remove();
-          // Call the specified callback
-          if (options && options.onEntrypointLoaded) {
-            options.onEntrypointLoaded({
-              initializeEngine: function() {
-                return new Promise(function(resolve) {
-                  resolve({
-                    runApp: function() {
-                      window.flutter_inappwebview = {};
-                      window.dispatchEvent(new Event('flutter-first-frame'));
-                    }
-                  });
-                });
-              }
+        };
+      };
+      
+      // Start loading the app
+      if (window.flutter_web_optimizer) {
+        window.flutter_web_optimizer.loadEntrypoint({
+          moduleLoader: loadMainDartJs,
+          onEntrypointLoaded: function(engineInitializer) {
+            engineInitializer.initializeEngine().then(function(appRunner) {
+              appRunner.runApp();
             });
           }
         });
-      };
-      
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
+      } else {
+        // For older browsers or when the optimizer is not available
+        loadMainDartJs();
+      }
     });
   </script>
 </body>
