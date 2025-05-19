@@ -1,0 +1,8 @@
+RewriteEngine On
+# Handle requests for files that actually exist
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Handle all other requests by redirecting to index.html
+RewriteRule ^ index.html [L]

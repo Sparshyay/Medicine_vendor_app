@@ -6,7 +6,7 @@
     "background_color": "#1A73E8",
     "theme_color": "#1A73E8",
     "description": "Medical representative app for managing doctors and brochures.",
-    "orientation": "portrait-primary",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {
