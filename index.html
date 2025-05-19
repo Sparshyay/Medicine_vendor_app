@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Medical representative app for managing doctors and brochures.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="MRship App">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>MRship App</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Styling -->
+  <style>
+    body {
+      background-color: #1A73E8;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: 'Roboto', sans-serif;
+    }
+    .loader {
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 5px solid white;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading">
+    <div class="loader"></div>
+    <p>Loading MRship App...</p>
+  </div>
+
+  <script src="flutter.js" defer></script>
+  <script>
+    window.addEventListener('load', function() {
+      var loading = document.querySelector('#loading');
+      const serviceWorkerVersion = "2059573231";
+      
+      // Download main.dart.js
+      _flutter = _flutter || {};
+      _flutter.loader = _flutter.loader || {};
+      _flutter.loader.loadEntrypoint = function(options) {
+        var entrypointScript = document.createElement('script');
+        entrypointScript.src = 'main.dart.js';
+        entrypointScript.type = 'application/javascript';
+        document.body.appendChild(entrypointScript);
+        entrypointScript.addEventListener('load', function() {
+          // Hide loading indicator
+          loading.remove();
+          // Call the specified callback
+          if (options && options.onEntrypointLoaded) {
+            options.onEntrypointLoaded({
+              initializeEngine: function() {
+                return new Promise(function(resolve) {
+                  resolve({
+                    runApp: function() {
+                      window.flutter_inappwebview = {};
+                      window.dispatchEvent(new Event('flutter-first-frame'));
+                    }
+                  });
+                });
+              }
+            });
+          }
+        });
+      };
+      
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
